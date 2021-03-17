@@ -12,12 +12,39 @@ namespace FizzBuzz
         {
             // Nombre d'itérations: Sortir le for
 
-            int depart = 1;
-            int fin = 100;
-            int pas = 1;
-            IExporter exporter = new ConsoleExporter();
+            int start = 1;
+            int end = 100;
+            int step = 1;
+            Iteration iteration = new Iteration();
 
-            for (int i = depart; i <= fin; i+=pas)
+            iteration.Iterate(start, end, step);
+        }
+    }
+
+    public interface IExporter
+    {
+        void Export(string builded);
+    }
+    public class ConsoleExporter : IExporter
+    {
+        public void Export(string builded)
+        {
+            Console.WriteLine(builded);
+        }
+    }
+
+    public class Iteration
+    {
+        IExporter exporter;
+        Fizz fizz;
+
+        public Iteration() {
+            this.exporter = new ConsoleExporter();
+            this.fizz = new Fizz(this.exporter);
+        }
+        public void Iterate(int start, int end, int step)
+        {
+            for (int i = start; i <= end; i += step)
             {
                 if (Condition.FizzBuzz(i))
                 {
@@ -25,11 +52,8 @@ namespace FizzBuzz
                     continue;
                 }
 
-                else if (Condition.Fizz(i))
-                {
-                    exporter.Export(StringBuilder.Fizz(i));
+                else if (fizz.get(i, exporter))
                     continue;
-                }
 
                 else if (Condition.Buzz(i))
                 {
@@ -38,37 +62,35 @@ namespace FizzBuzz
                 }
             }
         }
-
-        
     }
 
-    public interface IExporter
-    {
-        void Export(string builded);
-    }
-    public class ConsoleExporter : IExporter {
-        public void Export(string builded) {
-            Console.WriteLine(builded);
+    public class Fizz {
+        IExporter exporter;
+
+        public Fizz(IExporter exporter) {
+            this.exporter = exporter;
+        } 
+        public bool get(int input, IExporter exporter) {
+            if (input % 3 == 0) {
+                exporter.Export(StringBuilder.Format(input, "Fizz"));
+            }
+            return input % 3 == 0;
         }
     }
-
-    public class WebExporter : IExporter {
-        public void Export(string builded) {}
+    public class WebExporter : IExporter
+    {
+        public void Export(string builded) { }
     }
     // Les deux classes sont très semblable, devrait-on faire qqchose ?
-    public class StringBuilder {
-        public static string Fizz(int input) {
-            return $"{input} Fizz";
-        }
-        public static string Buzz(int input) {
-            return $"{input} Buzz";
-        }
-
-        public static string FizzBuzz(int input) {
-            return $"{input} FizzBuzz";
+    public class StringBuilder
+    {
+        public static string Format(int input, string result)
+        {
+            return $"{input} - {result}";
         }
     }
-    public class Condition {
+    public class Condition
+    {
         public static bool Fizz(int input) { return input % 3 == 0; }
         public static bool Buzz(int input) { return input % 5 == 0; }
         public static bool FizzBuzz(int input) { return Fizz(input) && Buzz(input); }
