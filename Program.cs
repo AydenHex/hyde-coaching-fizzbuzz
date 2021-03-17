@@ -4,28 +4,43 @@ namespace FizzBuzz
 {
     class Program
     {
+        // Main = Orchestrateur
         static void Main(string[] args)
         {
-            for (int i = 1; i <= 100; i++)
+            // Nombre d'itérations: Sortir le for
+            // Affichage:
+
+            int depart = 1;
+            int fin = 100;
+            int pas = 1;
+            for (int i = depart; i <= fin; i+=pas)
             {
-                if (i % 3 == 0 && i % 5 == 0)
+                if (Condition.FizzBuzz(i))
                 {
                     Console.WriteLine($"{i} : FizzBuzz");
                     continue;
                 }
 
-                else if (i % 3 == 0)
+                else if (Condition.Fizz(i))
                 {
                     Console.WriteLine($"{i} : Fizz");
                     continue;
                 }
 
-                else if (i % 5 == 0)
+                else if (Condition.Buzz(i))
                 {
                     Console.WriteLine($"{i} : Buzz");
                     continue;
                 }
             }
         }
+
+        
+    }
+
+    public class Condition {
+        public static bool Fizz(int input) { return input % 3 == 0; }
+        public static bool Buzz(int input) { return input % 5 == 0; }
+        public static bool FizzBuzz(int input) { return Fizz(input) && Buzz(input); }
     }
 }
