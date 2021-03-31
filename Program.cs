@@ -5,18 +5,18 @@ namespace FizzBuzz
 {
     class Program
     {
-        // Main = Orchestrateur
-        // Si je devais changer l'affichage console en affichage Web, qu'est-ce qui change ?
-        // - Console.WriteLine qui disparait
-        // - Methode StringBuilder change si on veux changer le format
         static void Main(string[] args)
         {
-            // Nombre d'itérations: Sortir le for
-
             int start = 1;
             int end = 100;
             int step = 1;
-            Iteration iteration = new Iteration();
+            IExporter exporter = new ConsoleExporter();
+            List<IVerifyAndExport> test = new List<IVerifyAndExport>{
+                new FizzBuzz(exporter),
+                new Fizz(exporter),
+                new Buzz(exporter),
+            };
+            Iteration iteration = new Iteration(test);
 
             iteration.Iterate(start, end, step);
         }
@@ -37,26 +37,20 @@ namespace FizzBuzz
 
     public class Iteration
     {
-        IExporter exporter;
-        List<IVerifyAndExport> renameMe;
+        List<IVerifyAndExport> verifyAndExport;
 
-        public Iteration() {
-            this.exporter = new ConsoleExporter();
-            this.renameMe = new List<IVerifyAndExport>{
-                new FizzBuzz(this.exporter),
-                new Fizz(this.exporter),
-                new Buzz(this.exporter),
-            };
+        public Iteration(List<IVerifyAndExport> verifyAndExport) {
+            this.verifyAndExport = verifyAndExport;
         }
 
         public void Iterate(int start, int end, int step)
         {
             for (int i = start; i <= end; i += step)
             {
-                foreach(var Rename in this.renameMe) {
-                    if (Rename.verify(i))
+                foreach(var myVerifyAndExport in this.verifyAndExport) {
+                    if (myVerifyAndExport.verify(i))
                     {
-                        Rename.export(i);
+                        myVerifyAndExport.export(i);
                         break;
                     }
                 }
@@ -64,7 +58,7 @@ namespace FizzBuzz
         }
     }
 
-    interface IVerifyAndExport {
+    public interface IVerifyAndExport {
         bool verify(int input);
         void export(int input);
     }
@@ -136,7 +130,7 @@ namespace FizzBuzz
         public void Export(string builded) { }
     }
 
-    // Les deux classes sont très semblable, devrait-on faire qqchose ?
+    // Possiblement problématique pour les tests.. a réflechir !
     public class StringBuilder
     {
         public static string Format(int input, string result)
