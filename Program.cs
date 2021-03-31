@@ -66,6 +66,7 @@ namespace FizzBuzz
     public class Fizz : IVerifyAndExport 
     {
         IExporter exporter;
+        const name = "Fizz";
 
         public Fizz(IExporter exporter) 
         {
@@ -77,13 +78,14 @@ namespace FizzBuzz
         }
         
         public void export(int input) {
-            this.exporter.Export(StringBuilder.Format(input, "Fizz"));      
+            this.exporter.Export(StringBuilder.Format(input, name));      
         }
     }
 
     public class Buzz : IVerifyAndExport
     {
         IExporter exporter;
+        const name = "Buzz";
 
         public Buzz(IExporter exporter)
         {
@@ -97,7 +99,7 @@ namespace FizzBuzz
 
         public void export(int input)
         {
-            this.exporter.Export(StringBuilder.Format(input, "Buzz"));
+            this.exporter.Export(StringBuilder.Format(input, name));
         }
     }
 
@@ -106,6 +108,7 @@ namespace FizzBuzz
         IExporter exporter;
         Fizz fizz;
         Buzz buzz;
+        const name = "FizzBuzz";
 
         public FizzBuzz(IExporter exporter)
         {
@@ -121,7 +124,7 @@ namespace FizzBuzz
 
         public void export(int input)
         {
-            this.exporter.Export(StringBuilder.Format(input, "FizzBuzz"));
+            this.exporter.Export(StringBuilder.Format(input, name));
         }
     }
 
