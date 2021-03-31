@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FizzBuzz
 {
@@ -37,37 +38,27 @@ namespace FizzBuzz
     public class Iteration
     {
         IExporter exporter;
-        Fizz fizz;
-        Buzz buzz;
-        FizzBuzz fizzBuzz;
+        List<IVerifyAndExport> renameMe;
 
         public Iteration() {
             this.exporter = new ConsoleExporter();
-            this.fizz = new Fizz(this.exporter);
-            this.buzz = new Buzz(this.exporter);
-            this.fizzBuzz = new FizzBuzz(this.exporter);
+            this.renameMe = new List<IVerifyAndExport>{
+                new FizzBuzz(this.exporter),
+                new Fizz(this.exporter),
+                new Buzz(this.exporter),
+            };
         }
 
         public void Iterate(int start, int end, int step)
         {
             for (int i = start; i <= end; i += step)
             {
-                if (fizzBuzz.verify(i))
-                {
-                    fizzBuzz.export(i);
-                    continue;
-                }
-
-                else if (fizz.verify(i)) 
-                {
-                    fizz.export(i);
-                    continue;
-                }
-
-                else if (buzz.verify(i))
-                {
-                    buzz.export(i);
-                    continue;
+                foreach(var Rename in this.renameMe) {
+                    if (Rename.verify(i))
+                    {
+                        Rename.export(i);
+                        break;
+                    }
                 }
             }
         }
