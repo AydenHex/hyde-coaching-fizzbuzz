@@ -143,10 +143,4 @@ namespace FizzBuzz
             return $"{input} - {result}";
         }
     }
-    public class Condition
-    {
-        public static bool Fizz(int input) { return input % 3 == 0; }
-        public static bool Buzz(int input) { return input % 5 == 0; }
-        public static bool FizzBuzz(int input) { return Fizz(input) && Buzz(input); }
-    }
 }
