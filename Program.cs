@@ -73,7 +73,13 @@ namespace FizzBuzz
         }
     }
 
-    public class Fizz {
+    interface IVerifyAndExport {
+        bool verify(int input);
+        void export(int input);
+    }
+    
+    public class Fizz : IVerifyAndExport 
+    {
         IExporter exporter;
 
         public Fizz(IExporter exporter) 
@@ -90,7 +96,7 @@ namespace FizzBuzz
         }
     }
 
-    public class Buzz 
+    public class Buzz : IVerifyAndExport
     {
         IExporter exporter;
 
@@ -110,18 +116,22 @@ namespace FizzBuzz
         }
     }
 
-    public class FizzBuzz
+    public class FizzBuzz : IVerifyAndExport
     {
         IExporter exporter;
+        Fizz fizz;
+        Buzz buzz;
 
         public FizzBuzz(IExporter exporter)
         {
             this.exporter = exporter;
+            this.fizz = new Fizz(this.exporter);
+            this.buzz = new Buzz(this.exporter);
         }
 
         public bool verify(int input)
         {
-            return input % 3 == 0 && input % 5 == 0;
+            return fizz.verify(input) && buzz.verify(input);
         }
 
         public void export(int input)
