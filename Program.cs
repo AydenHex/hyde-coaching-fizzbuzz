@@ -25,6 +25,7 @@ namespace FizzBuzz
     {
         void Export(string builded);
     }
+
     public class ConsoleExporter : IExporter
     {
         public void Export(string builded)
@@ -42,22 +43,26 @@ namespace FizzBuzz
             this.exporter = new ConsoleExporter();
             this.fizz = new Fizz(this.exporter);
         }
+
         public void Iterate(int start, int end, int step)
         {
             for (int i = start; i <= end; i += step)
             {
                 if (Condition.FizzBuzz(i))
                 {
-                    exporter.Export(StringBuilder.FizzBuzz(i));
+                    exporter.Export(StringBuilder.Format(i, "FizzBuzz"));
                     continue;
                 }
 
-                else if (fizz.get(i, exporter))
+                else if (fizz.verify(i)) 
+                {
+                    fizz.export(i);
                     continue;
+                }
 
                 else if (Condition.Buzz(i))
                 {
-                    exporter.Export(StringBuilder.Buzz(i));
+                    exporter.Export(StringBuilder.Format(i, "Buzz"));
                     continue;
                 }
             }
@@ -67,20 +72,26 @@ namespace FizzBuzz
     public class Fizz {
         IExporter exporter;
 
-        public Fizz(IExporter exporter) {
+        public Fizz(IExporter exporter) 
+        {
             this.exporter = exporter;
-        } 
-        public bool get(int input, IExporter exporter) {
-            if (input % 3 == 0) {
-                exporter.Export(StringBuilder.Format(input, "Fizz"));
-            }
+        }
+
+        public bool verify(int input) {
             return input % 3 == 0;
         }
+        
+        public void export(int input) {
+            this.exporter.Export(StringBuilder.Format(input, "Fizz"));
+            
+        }
     }
+
     public class WebExporter : IExporter
     {
         public void Export(string builded) { }
     }
+
     // Les deux classes sont très semblable, devrait-on faire qqchose ?
     public class StringBuilder
     {
