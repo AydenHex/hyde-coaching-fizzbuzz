@@ -38,19 +38,23 @@ namespace FizzBuzz
     {
         IExporter exporter;
         Fizz fizz;
+        Buzz buzz;
+        FizzBuzz fizzBuzz;
 
         public Iteration() {
             this.exporter = new ConsoleExporter();
             this.fizz = new Fizz(this.exporter);
+            this.buzz = new Buzz(this.exporter);
+            this.fizzBuzz = new FizzBuzz(this.exporter);
         }
 
         public void Iterate(int start, int end, int step)
         {
             for (int i = start; i <= end; i += step)
             {
-                if (Condition.FizzBuzz(i))
+                if (fizzBuzz.verify(i))
                 {
-                    exporter.Export(StringBuilder.Format(i, "FizzBuzz"));
+                    fizzBuzz.export(i);
                     continue;
                 }
 
@@ -60,9 +64,9 @@ namespace FizzBuzz
                     continue;
                 }
 
-                else if (Condition.Buzz(i))
+                else if (buzz.verify(i))
                 {
-                    exporter.Export(StringBuilder.Format(i, "Buzz"));
+                    buzz.export(i);
                     continue;
                 }
             }
@@ -82,8 +86,47 @@ namespace FizzBuzz
         }
         
         public void export(int input) {
-            this.exporter.Export(StringBuilder.Format(input, "Fizz"));
-            
+            this.exporter.Export(StringBuilder.Format(input, "Fizz"));      
+        }
+    }
+
+    public class Buzz 
+    {
+        IExporter exporter;
+
+        public Buzz(IExporter exporter)
+        {
+            this.exporter = exporter;
+        }
+
+        public bool verify(int input) 
+        {
+            return input % 5 == 0;
+        }
+
+        public void export(int input)
+        {
+            this.exporter.Export(StringBuilder.Format(input, "Buzz"));
+        }
+    }
+
+    public class FizzBuzz
+    {
+        IExporter exporter;
+
+        public FizzBuzz(IExporter exporter)
+        {
+            this.exporter = exporter;
+        }
+
+        public bool verify(int input)
+        {
+            return input % 3 == 0 && input % 5 == 0;
+        }
+
+        public void export(int input)
+        {
+            this.exporter.Export(StringBuilder.Format(input, "FizzBuzz"));
         }
     }
 
